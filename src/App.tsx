@@ -100,14 +100,7 @@ function App() {
                   layoutId={todo.id}
                   layoutScroll
                   dragConstraints={{ left: 0, right: 0 }}
-                  onDrag={(_, info) => {
-                    if (info.point.x < 1) {
-                      setScrolled(todo.id);
-                    }
-                    if (info.point.x > -1) {
-                      setScrolled('');
-                    }
-                  }}
+                  onDragEnd={() => setScrolled(todo.id)}
                 >
                   <div className=" w-[95vw]  my-2 bg-white shadow-md rounded-xl border border-zinc-100  p-4 flex flex-col gap-4">
                     {/* <h1 className="text-lg font-semibold">{todo.name}</h1> */}
@@ -137,20 +130,32 @@ function App() {
                     />
                   </div>
                   {scrolled === todo.id ? (
-                    <div className="py-2 w-[100px]">
-                      <div
+                    <motion.div
+                      className="py-2 w-[100px]"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      <motion.div
                         className="h-1/2 w-full bg-red-500 flex items-center justify-center text-white cursor-pointer"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         onClick={() => deleteTodo(todo.id)}
                       >
                         delete
-                      </div>
-                      <div
+                      </motion.div>
+                      <motion.div
                         className="h-1/2 w-full bg-blue-500 flex items-center justify-center text-white cursor-pointer"
-                        onClick={() => setScrolled('')}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setScrolled('');
+                        }}
                       >
                         close
-                      </div>
-                    </div>
+                      </motion.div>
+                    </motion.div>
                   ) : null}
                 </motion.div>
               ))}
