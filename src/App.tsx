@@ -18,6 +18,7 @@ function App() {
     description: '',
     status: 'new'
   });
+  const [scrolled, setScrolled] = useState<string>('');
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -79,38 +80,36 @@ function App() {
           <h1 className="text-center">Todo list with Capacitor</h1>
         </motion.h1>
         <motion.div
-          className="h-[calc(100vh-100px)] w-full overflow-y-auto snap snap-y snap-mandatory"
+          className="h-[calc(100vh-100px)] w-full overflow-y-auto  snap snap-y snap-mandatory"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
           {allTodos.length > 0 ? (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ staggerChildren: 0.1 }}
-            >
-              <AnimatePresence presenceAffectsLayout mode="sync">
-                {allTodos.map((todo) => (
-                  <motion.div
-                    key={todo.id}
-                    className=" my-2 bg-white shadow-md rounded-xl border border-zinc-100  p-4 flex flex-col gap-4"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    transition={{ duration: 0.25 }}
-                    drag="x"
-                    layout
-                    layoutId={todo.id}
-                    layoutScroll
-                    dragConstraints={{ left: 0, right: 0 }}
-                    onDragEnd={(_, info) => {
-                      if (info.point.x < -100) {
-                        deleteTodo(todo.id);
-                        console.log('delete');
-                      }
-                    }}
-                  >
+            <AnimatePresence presenceAffectsLayout mode="sync">
+              {allTodos.map((todo) => (
+                <motion.div
+                  key={todo.id}
+                  className="flex w-[90vw] overflow-x-auto "
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  transition={{ duration: 0.25 }}
+                  drag="x"
+                  layout
+                  layoutId={todo.id}
+                  layoutScroll
+                  dragConstraints={{ left: 0, right: 0 }}
+                  onDrag={(_, info) => {
+                    if (info.point.x < 1) {
+                      setScrolled(todo.id);
+                    }
+                    if (info.point.x > -1) {
+                      setScrolled('');
+                    }
+                  }}
+                >
+                  <div className=" w-[95vw]  my-2 bg-white shadow-md rounded-xl border border-zinc-100  p-4 flex flex-col gap-4">
                     {/* <h1 className="text-lg font-semibold">{todo.name}</h1> */}
                     <Input
                       variant="filled"
@@ -136,10 +135,26 @@ function App() {
                       ]}
                       onChange={(value) => editTodo(todo.id, { status: value })}
                     />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </motion.div>
+                  </div>
+                  {scrolled === todo.id ? (
+                    <div className="py-2 w-[100px]">
+                      <div
+                        className="h-1/2 w-full bg-red-500 flex items-center justify-center text-white cursor-pointer"
+                        onClick={() => deleteTodo(todo.id)}
+                      >
+                        delete
+                      </div>
+                      <div
+                        className="h-1/2 w-full bg-blue-500 flex items-center justify-center text-white cursor-pointer"
+                        onClick={() => setScrolled('')}
+                      >
+                        close
+                      </div>
+                    </div>
+                  ) : null}
+                </motion.div>
+              ))}
+            </AnimatePresence>
           ) : (
             <motion.h1
               className="text-center text-xl font-semibold"
