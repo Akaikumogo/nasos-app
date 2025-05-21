@@ -9,7 +9,8 @@ const Home = () => {
 
   const [isSetTimerModalOpen, setIsSetTimerModalOpen] = useState(false);
   const [isInputModalOpen, setIsInputModalOpen] = useState(false);
-  const [timerValue, setTimerValue] = useState(null); // TimePicker uchun
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [timerValue, _setTimerValue] = useState(null); // TimePicker uchun
   const [form] = Form.useForm();
 
   const showTimerModal = () => setIsSetTimerModalOpen(true);
@@ -17,7 +18,7 @@ const Home = () => {
 
   const handleTimerOk = () => {
     if (timerValue) {
-      console.log('Timer set to:', timerValue?.format('HH:mm:ss'));
+      console.log('Timer set to:', timerValue);
     } else {
       console.log('No timer value set');
     }
@@ -160,12 +161,7 @@ const Home = () => {
         okText={t({ uz: 'Saqlash', ru: 'Сохранить', en: 'Save' })}
         cancelText={t({ uz: 'Bekor qilish', ru: 'Отмена', en: 'Cancel' })}
       >
-        <TimePicker
-          className="w-full"
-          onChange={(value) => setTimerValue(value)}
-          value={timerValue}
-          format="HH:mm:ss"
-        />
+        <TimePicker className="w-full" value={timerValue} format="HH:mm:ss" />
       </Modal>
 
       {/* Input Data Modal */}

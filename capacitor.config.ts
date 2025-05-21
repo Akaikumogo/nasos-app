@@ -1,14 +1,7 @@
-import type { CapacitorConfig } from '@capacitor/cli';
-
-const config: CapacitorConfig = {
-  appId: 'com.example.todo',
-  appName: 'Nasos raqamli boshqaruvi',
+// capacitor.config.ts
+export default {
+  appId: 'com.example.app',
+  appName: 'Nasoslar raqamli boshqaruvi',
   webDir: 'dist',
-  plugins: {
-    SplashScreen: {
-      launchAutoHide: true
-    }
-  }
+  bundledWebRuntime: false
 };
-
-export default config;
