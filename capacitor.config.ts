@@ -5,6 +5,7 @@ export default {
   webDir: 'dist',
   bundledWebRuntime: false,
   server: {
-    androidScheme: 'http' // HTTPS o‘rniga HTTP bo‘ladi
+    url: 'http://185.217.131.96:4958',
+    cleartext: true
   }
 };
