@@ -144,7 +144,10 @@ const HomeContent: React.FC = () => {
   // Whenever user.timerRemaining changes, initialize countdownSeconds
   useEffect(() => {
     if (user) {
-      const [h, m] = user.timerRemaining.split(':').map(Number);
+      const [h, m] = user?.timerRemaining?.split(':').map((v) => Number(v)) || [
+        '00',
+        '00'
+      ];
       const totalSecs = h * 3600 + m * 60;
       setCountdownSeconds(totalSecs > 0 ? totalSecs : null);
       if (totalSecs > 0) {
