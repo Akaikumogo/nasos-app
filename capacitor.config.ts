@@ -6,6 +6,7 @@ export default {
   bundledWebRuntime: false,
   server: {
     url: 'http://185.217.131.96:5173',
+    fallbackUrl: 'index.html',
     cleartext: true
   }
 };
