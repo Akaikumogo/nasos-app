@@ -70,7 +70,7 @@ interface UserPatchPayload {
 // Constants
 // ----------------------------------------------------------------
 
-const API_BASE = 'http://185.217.131.96:4958/'; // Backend base URL
+const API_BASE = 'http://185.217.131.96:4958'; // Backend base URL
 
 // ----------------------------------------------------------------
 // API Helpers (Axios)
