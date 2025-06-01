@@ -5,7 +5,7 @@ export default {
   webDir: 'dist',
   bundledWebRuntime: false,
   server: {
-    url: 'http://185.217.131.96:4958',
+    url: 'http://185.217.131.96:5173',
     cleartext: true
   }
 };
