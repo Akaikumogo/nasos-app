@@ -9,6 +9,7 @@ import { ModeToggle } from '@/components/mode-toogle';
 import useCapacitorStorage from '@/hooks/useLocalStorage';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
 
 // import { Eye, EyeOff, Lock, User } from 'lucide-react';
 
@@ -43,26 +44,36 @@ const LoginPage = () => {
   });
   const { mutate } = useMutation({
     mutationFn: async (data: loginPayload) => {
-      fetch('http://185.217.131.96:4958/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            setToken(data.data);
-            return data;
-          } else {
-            throw new Error(data.message);
-          }
-        });
+      return axios.post('http://185.217.131.96:4958/auth/login', {
+        username: data.phoneNumber.replace('+', ''),
+        password: data.password
+      });
+    },
+    onSuccess(data) {
+      setToken(data.data);
+      navigate('/dashboard/home');
+      message.success({
+        content: t({
+          uz: 'Kirish muvaffaqiyatli',
+          en: 'Login successful',
+          ru: 'Вход выполнен успешно'
+        })
+      });
+    },
+    onError(error) {
+      message.error({
+        content:
+          t({
+            uz: 'Kirishda xatolik',
+            en: 'Login error',
+            ru: 'Ошибка входа'
+          }) + `: ${error.message}`
+      });
     }
   });
   const { message } = App.useApp();
   const [_, setToken] = useCapacitorStorage<string | null>('token', null);
+
   const navigate = useNavigate();
   return (
     <div className="h-screen flex flex-col w-full items-center justify-center ">
@@ -155,36 +166,10 @@ const LoginPage = () => {
             disabled={stateValidation.password && stateValidation.phoneNumber}
             onClick={() =>
               checkValidation(() => {
-                mutate(
-                  {
-                    phoneNumber: state.phoneNumber || '',
-                    password: state.password || ''
-                  },
-                  {
-                    onSuccess: () => {
-                      message.success({
-                        content: t({
-                          uz: 'Kirish muvaffaqiyatli',
-                          en: 'Login successful',
-                          ru: 'Вход выполнен успешно'
-                        })
-                      });
-                      setToken(state.phoneNumber || '');
-
-                      navigate('/dashboard/home');
-                    },
-                    onError: (error) => {
-                      message.error({
-                        content:
-                          t({
-                            uz: 'Kirishda xatolik',
-                            en: 'Login error',
-                            ru: 'Ошибка входа'
-                          }) + `: ${error.message}`
-                      });
-                    }
-                  }
-                );
+                mutate({
+                  phoneNumber: state.phoneNumber || '',
+                  password: state.password || ''
+                });
               })
             }
           >

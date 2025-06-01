@@ -24,6 +24,7 @@ import {
   useMutation,
   useQueryClient
 } from '@tanstack/react-query';
+import useLocalStorage from '@/hooks/useLocalStorage';
 
 // ----------------------------------------------------------------
 // Translation Hook Stub (replace with your real i18n solution)
@@ -68,24 +69,12 @@ interface UserPatchPayload {
 // ----------------------------------------------------------------
 // Constants
 // ----------------------------------------------------------------
-const USERNAME = '998991751037'; // Hardcoded username used in backend
-const API_BASE = 'http://localhost:4958'; // Backend base URL
+
+const API_BASE = 'http://185.217.131.96:4958/'; // Backend base URL
 
 // ----------------------------------------------------------------
 // API Helpers (Axios)
 // ----------------------------------------------------------------
-async function fetchUser(): Promise<User> {
-  const response = await axios.get<User>(`${API_BASE}/users/${USERNAME}`);
-  return response.data;
-}
-
-async function patchUserApi(payload: UserPatchPayload): Promise<User> {
-  const response = await axios.patch<User>(
-    `${API_BASE}/users/${USERNAME}`,
-    payload
-  );
-  return response.data;
-}
 
 // ----------------------------------------------------------------
 // Simple Clock Component (updates every second)
@@ -120,7 +109,19 @@ const HomeContent: React.FC = () => {
   // Height form
   const [heightForm] = Form.useForm();
   const [heightInput, setHeightInput] = useState<number | undefined>(undefined);
-
+  const [token] = useLocalStorage('token', { username: '' });
+  const USERNAME = token?.username; // Replace with actual username or logic to get it
+  async function patchUserApi(payload: UserPatchPayload): Promise<User> {
+    const response = await axios.patch<User>(
+      `${API_BASE}/users/${USERNAME}`,
+      payload
+    );
+    return response.data;
+  }
+  async function fetchUser(): Promise<User> {
+    const response = await axios.get<User>(`${API_BASE}/users/${USERNAME}`);
+    return response.data;
+  }
   // -----------------------------
   // 1) Fetch user data with useQuery
   // -----------------------------
