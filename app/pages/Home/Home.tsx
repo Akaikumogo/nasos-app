@@ -101,7 +101,7 @@ const HomeContent: React.FC = () => {
 
   // TimePicker value
   const [timerValue, setTimerValue] = useState<Dayjs | null>(null);
-  const [m3, setm3] = useState<boolean>(true);
+  const [m3, setm3] = useState<boolean>(false);
   // Countdown seconds and display
   const [countdownSeconds, setCountdownSeconds] = useState<number | null>(null);
   const [displayTimer, setDisplayTimer] = useState('00:00:00');
@@ -367,7 +367,7 @@ const HomeContent: React.FC = () => {
         <div className="flex justify-between items-center">
           <div className="text-4xl font-bold">{displayTimer}</div>
           <div className="space-y-2">
-            {user.motorState === 'on' ? (
+            {user.motorState === 'on' && user.timerRemaining != '00:00' ? (
               <Button type="primary" onClick={handleStopTimer}>
                 {t({ uz: 'Stop', ru: 'Стоп', en: 'Stop Timer' })}
               </Button>
@@ -425,10 +425,11 @@ const HomeContent: React.FC = () => {
             value={m3 ? user.totalLitres / 1000 : user.totalLitres}
             precision={2}
             suffix={
-              <div className="flex items-start justify-end">
+              <div className="flex items-start justify-end relative">
                 <Select
-                  className="w-[80px]"
+                  className="w-[80px] absolute right-0 top-[-2.5px]"
                   variant="filled"
+                  size="small"
                   value={m3}
                   onChange={(value) => setm3(value)}
                   options={[
@@ -448,6 +449,7 @@ const HomeContent: React.FC = () => {
       {/* Height Input Button */}
       <div className="text-center mt-4">
         <Button
+          className="w-full"
           type="primary"
           onClick={openHeightModal}
           size="large"
