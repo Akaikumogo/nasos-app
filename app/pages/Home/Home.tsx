@@ -42,11 +42,11 @@ interface User {
   username: string;
   password: string;
   waterDepth: number;
-  waterHeight: number; // Desired height
+  height: number; // Desired height
   totalLitres: number;
   totalWater: number;
   totalElectricity: number;
-  motorState: 'on' | 'off';
+  motorState: 'ON' | 'OFF';
   timerRemaining: string; // "HH:mm"
   lastTimerTime?: string; // ISO string
   lastHeartbeat?: string; // ISO string
@@ -57,10 +57,10 @@ interface User {
 interface UserPatchPayload {
   waterDepth?: number;
   totalWater?: number;
-  waterHeight?: number;
+  height?: number;
   totalLitres?: number;
   totalElectricity?: number;
-  motorState?: 'on' | 'off';
+  motorState?: 'ON' | 'OFF';
   timerRemaining?: string; // "HH:mm"
   lastTimerTime?: string; // ISO string
   lastHeartbeat?: string; // ISO string
@@ -256,7 +256,7 @@ const HomeContent: React.FC = () => {
       return;
     }
     // Check motor can start: waterHeight > waterDepth
-    if (user.waterHeight <= user.waterDepth) {
+    if (user.height <= user.waterDepth) {
       message.error(
         t({
           uz: 'Balandlik suv chuqurligidan katta bo‘lishi kerak',
@@ -269,7 +269,7 @@ const HomeContent: React.FC = () => {
     }
     const hhmm = timerValue.format('HH:mm');
     // Start motor + set timerRemaining
-    patchMutation.mutate({ timerRemaining: hhmm, motorState: 'on' });
+    patchMutation.mutate({ timerRemaining: hhmm, motorState: 'ON' });
     closeTimerModal();
   };
 
@@ -279,7 +279,7 @@ const HomeContent: React.FC = () => {
       .validateFields()
       .then(() => {
         if (heightInput === undefined) return;
-        patchMutation.mutate({ waterHeight: heightInput });
+        patchMutation.mutate({ height: heightInput });
         closeHeightModal();
       })
       .catch(() => {
@@ -289,13 +289,13 @@ const HomeContent: React.FC = () => {
 
   // Toggle motor on/off manually
   const handleToggleMotor = () => {
-    const newState: 'on' | 'off' = user.motorState === 'on' ? 'off' : 'on';
+    const newState: 'ON' | 'OFF' = user.motorState === 'ON' ? 'OFF' : 'ON';
     patchMutation.mutate({ motorState: newState });
   };
 
   // Stop timer (set to "00:00" and motor off)
   const handleStopTimer = () => {
-    patchMutation.mutate({ timerRemaining: '00:00', motorState: 'off' });
+    patchMutation.mutate({ timerRemaining: '00:00', motorState: 'OFF' });
   };
 
   // Height input change
@@ -330,13 +330,13 @@ const HomeContent: React.FC = () => {
             <span className="font-semibold capitalize">{user.motorState}</span>
             <span
               className={`w-3 h-3 rounded-full ${
-                user.motorState === 'on' ? 'bg-green-500' : 'bg-red-500'
+                user.motorState === 'ON' ? 'bg-green-500' : 'bg-red-500'
               }`}
             />
             <Button size="small" onClick={handleToggleMotor}>
-              {user.motorState === 'on'
+              {user.motorState === 'ON'
                 ? t({ uz: 'O‘chirish', ru: 'Выключить', en: 'Turn Off' })
-                : t({ uz: 'Yoqish', ru: 'Включить', en: 'Turn On' })}
+                : t({ uz: 'Yoqish', ru: 'Включить', en: 'Turn ON' })}
             </Button>
           </div>
         </div>
@@ -367,7 +367,7 @@ const HomeContent: React.FC = () => {
         <div className="flex justify-between items-center">
           <div className="text-4xl font-bold">{displayTimer}</div>
           <div className="space-y-2">
-            {user.motorState === 'on' && user.timerRemaining != '00:00' ? (
+            {user.motorState === 'ON' && user.timerRemaining != '00:00' ? (
               <Button type="primary" onClick={handleStopTimer}>
                 {t({ uz: 'Stop', ru: 'Стоп', en: 'Stop Timer' })}
               </Button>
@@ -386,7 +386,7 @@ const HomeContent: React.FC = () => {
         title={t({
           uz: "Suv ma'lumotlari",
           ru: 'Инфо по воде',
-          en: 'Water Information'
+          en: 'Water InformatiON'
         })}
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -482,7 +482,7 @@ const HomeContent: React.FC = () => {
           value={timerValue}
           onChange={(val) => setTimerValue(val)}
         />
-        {user.waterHeight <= user.waterDepth && (
+        {user.height <= user.waterDepth && (
           <p className="mt-2 text-red-600">
             {t({
               uz: 'Diqqat: Balandlik suv chuqurligidan kichik yoki teng, motor boshlanmaydi.',
