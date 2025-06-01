@@ -109,8 +109,12 @@ const HomeContent: React.FC = () => {
   // Height form
   const [heightForm] = Form.useForm();
   const [heightInput, setHeightInput] = useState<number | undefined>(undefined);
-  const [token] = useLocalStorage('token', { username: '' });
-  const USERNAME = token?.username; // Replace with actual username or logic to get it
+  const [token] = useLocalStorage('token', {
+    user: {
+      username: ''
+    }
+  });
+  const USERNAME = token?.user?.username; // Replace with actual username or logic to get it
   async function patchUserApi(payload: UserPatchPayload): Promise<User> {
     const response = await axios.patch<User>(
       `${API_BASE}/users/${USERNAME}`,
